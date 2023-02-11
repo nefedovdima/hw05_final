@@ -107,7 +107,7 @@ class PostURLTests(TestCase):
         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
 
     def test_pages_use_correct_templates(self):
-        '''Проверяется, что unexisting_page/ 
+        '''Проверяется, что unexisting_page/
         соответствует шаблон core/404.html'''
         page_name = 'unexisting_page/'
         response = self.authorized_client_author.get(page_name)

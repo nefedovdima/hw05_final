@@ -78,6 +78,7 @@ class Comment(models.Model):
         auto_now_add=True,
     )
 
+
 class Follow(models.Model):
     user = models.ForeignKey(
         User,
@@ -91,5 +92,6 @@ class Follow(models.Model):
         on_delete=models.CASCADE,
         related_name='following',
     )
+
     def __str__(self):
         return f'Подписка {self.user} на {self.auth}'

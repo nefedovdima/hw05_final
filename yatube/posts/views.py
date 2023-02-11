@@ -3,9 +3,10 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_page
 
 
-from .models import Post, Group, User, Comment, Follow
+from .models import Post, Group, User, Follow
 from .forms import PostForm, CommentForm
 from .utils import pagination
+
 
 @cache_page(20, key_prefix='index_page')
 def index(request):
@@ -34,8 +35,9 @@ def profile(request, username):
     posts = Post.objects.filter(author=user)
     post_count = posts.count()
     page_obj = pagination(request, posts)
-    following = Follow.objects.filter(user=request.user
-        ).filter(author=user).exists()
+    following = (Follow.objects.
+                 filter(user=request.user).
+                 filter(author=user).exists())
     context = {
         'author': user,
         'page_obj': page_obj,
@@ -75,6 +77,7 @@ def post_edit(request, post_id):
                   template,
                   {'form': form, 'is_edit': is_edit, 'post_id': post_id})
 
+
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     form = CommentForm()
@@ -101,14 +104,12 @@ def add_comment(request, post_id):
 
 @login_required
 def follow_index(request):
-    # информация о текущем пользователе доступна в переменной request.user
     posts = Post.objects.select_related('author').filter(
         author__following__user=request.user)
     page_obj = pagination(request, posts)
-    context = {
-        'page_obj': page_obj
-        }
+    context = {'page_obj': page_obj}
     return render(request, 'posts/follow.html', context)
+
 
 @login_required
 def profile_follow(request, username):
@@ -117,6 +118,7 @@ def profile_follow(request, username):
     if author != request.user:
         Follow.objects.get_or_create(user=request.user, author=author)
     return redirect("posts:profile", username=username)
+
 
 @login_required
 def profile_unfollow(request, username):

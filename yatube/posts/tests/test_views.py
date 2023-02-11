@@ -133,7 +133,6 @@ class PostViewsTests(TestCase):
                 form_field = response.context['page_obj']
                 self.assertIn(PostViewsTests.post, form_field)
 
-
     def test_index_cach(self):
         '''Проверяется кеширование страницы index'''
         post = Post.objects.create(
@@ -148,6 +147,7 @@ class PostViewsTests(TestCase):
         cache.clear()
         post_after_cach_clear = self.guest_client.get(reverse('posts:index'))
         self.assertNotEqual(post_create.content, post_after_cach_clear.content)
+
 
 class PaginatorViewsTest(TestCase):
     @classmethod
@@ -196,4 +196,3 @@ class PaginatorViewsTest(TestCase):
             with self.subTest(page=page):
                 response = self.authorized_client.get(page + '?page=2')
                 self.assertEqual(len(response.context['page_obj']), 3)
-    
