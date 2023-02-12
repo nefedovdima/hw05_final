@@ -37,8 +37,7 @@ def profile(request, username):
     page_obj = pagination(request, posts)
     if request.user.is_authenticated:
         following = (Follow.objects.
-                     filter(user=request.user).
-                     filter(author=user).exists())
+                     filter(user=request.user, author=user).exists())
     else:
         following = False
     context = {
